@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <body>
+        <div ng-app="myApp" ng-controller="myCtrl">
+            <ul>
+                <li ng-repeat="x in names | filter: filter_char">
+                    {{x}}
+                </li>
+            </ul>
+            <p>Input filter_char : <input type="text" ng-model="filter_char"></p>
+        </div>
+
+        <script>
+            var app = angular.module("myApp", []);
+            app.controller("myCtrl", function($scope) {
+                $scope.names = [
+                    'test',
+                    'tick',
+                    'tok',
+                    'kim',
+                    'kang',
+                    'kock'
+                ];
+                $scope.filter_char = '';
+            });
+        </script>
+    </body>
+</html>

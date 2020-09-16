@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<html>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <body>
+        <div ng-app="" data-ng-init="price=500; quantity=2">
+            <h2>금액 계산기</h2>
+            <p>금액 : <input type="number" ng-model="price"> </p>
+            <p>수량 : <input type="number" ng-model="quantity"></p>
+            <p>총 금액 : <span ng-bind="price*quantity"></span></p>
+        </div>
+    </body>
+</html>

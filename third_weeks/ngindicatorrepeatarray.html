@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+
+<html>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <body>
+        <div ng-app="" ng-init="names = [
+                                { name: 'Hong', contry: 'Seoul' },
+                                { name: 'Kang', contry: 'Incheon' },
+                                { name: 'Lee', contry: 'Busan'}
+                                ]">
+        
+        <p>Repeat Object with ng-repeat</p>
+        <ul>
+            <li ng-repeat="x in names">
+                {{x.name + ", " + x.contry}}
+            </li>
+        </ul>
+            
+        </div>
+    </body>
+</html>
