@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<students>
+<student>
+<name> 윤여운 </name>
+<age> 23 </age>
+</student>
+<student>
+<name> 성춘향 </name>
+<age> 22 </age>
+</student>
+</students>
