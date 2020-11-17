@@ -3,11 +3,28 @@
     <head>
         <title>RestfulAPI</title>
         <script src="http://code.jquery.com/jquery-3.4.1.js"></script>
+        <script type="text/javascript" src="./tablesorter-master/dist/js/jquery.tablesorter.js"></script>
     </head>
 
     <style>
         .redfont {
             color: red;
+        }
+
+        .test {
+            width: 100%;
+            align-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .blue {
+            background-color: #4F81BD;
+            color: white;
+        }
+
+        .inner {
+            color: black;
         }
     </style>
 
@@ -22,6 +39,10 @@
         var average_score = '';
         var table_counter = 1;
         var check_type = false;     // false일경우 전공, true일경우 교양
+
+        $(function() {
+            $("#dynamicTable").tablesorter();
+        });
 
         function tableCreate(){
             var tc = new Array();
@@ -108,11 +129,13 @@
             average_score = calScore(false, average);
 
             score = calScore(check_type, total);
+            var table_color = table_counter%2
                         
-            html += '<tr>';
-            html += '<td bgcolor="white">'+type+'</td>';
+            html += '<tr class="inner' + table_color+'"' + '"center">';
+            html += '<tr class="inner">'
+            html += '<td>'+type+'</td>';
             html += '<td>'+necessary+'</td>';
-            html += '<td>'+subject+'</td>';
+            html += '<td align="left">'+subject+'</td>';
             html += '<td>'+grade+'</td>';
             html += '<td>'+attendance+'</td>';
             html += '<td>'+homework+'</td>';
@@ -120,6 +143,7 @@
             html += '<td>'+final+'</td>';
             html += '<td>'+total+'</td>';
             html += '<td></td>';
+
             if(score == 'F' || score == 'NP') {
                 html += '<td style="color: red">'+score+'</td>';
             } else {
@@ -153,6 +177,11 @@
             }
             check_type = false;
             table_counter += 1;
+            $("tr.inner:odd").css("background", "#E9EDF4");
+            $("tr.inner:even").css("background", "#E0E6F8");
+
+            var resort = true;
+            $("#dynamicTable").trigger("update", [resort]);
         }
 
         function calScore(check_type, score) {
@@ -184,14 +213,13 @@
                 }
             }
         }
-
     </script>
 
     <body>
-        <div>
-            <table id="dynamicTable" border="1px">
+        <div class="test">
+            <table id="dynamicTable" border=0px style="margin-left:auto; margin-right:auto;">
                 <thead>
-                    <tr>
+                    <tr class="blue" style="height: 50px;">
                         <th width="70px">이수</th>
                         <th width="70px">필수</th>
                         <th width="250px">과목명</th>
@@ -208,20 +236,19 @@
             <tbody id="dynamicTbody">
 
             </tbody>
-            <tr>
+            <tr align="center" style="background-color: #82A5D0; color: white;">
                 <td colspan="3">합계</td>
-                <td><input id="totalGrade" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
-                <td><input id="totalAttendance" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
-                <td><input id="totalHomework" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
-                <td><input id="totalMidterm" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
-                <td><input id="totalFinal" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
-                <td><input id="totalSum" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
-                <td><input id="average" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
-                <td><input id="average_score" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
+                <td><input id="totalGrade" type="text" style="background-color: transparent;border:0 solid white;text-align:center; width: 70px; color:white;" readonly></td>
+                <td><input id="totalAttendance" type="text" style="background-color: transparent;border:0 solid white;text-align:center; width: 70px; color:white;" readonly></td>
+                <td><input id="totalHomework" type="text" style="background-color: transparent;border:0 solid white;text-align:center; width: 70px; color:white;" readonly></td>
+                <td><input id="totalMidterm" type="text" style="background-color: transparent;border:0 solid white;text-align:center; width: 70px; color:white;" readonly></td>
+                <td><input id="totalFinal" type="text" style="background-color: transparent;border:0 solid white;text-align:center; width: 70px; color:white;" readonly></td>
+                <td><input id="totalSum" type="text" style="background-color: transparent;border:0 solid white;text-align:center; width: 70px; color:white;" readonly></td>
+                <td><input id="average" type="text" style="background-color: transparent;border:0 solid white;text-align:center; width: 70px; color:white;" readonly></td>
+                <td><input id="average_score" type="text" style="background-color: transparent;border:0 solid white;text-align:center; width: 70px;color:white;" readonly></td>
             </tr>
             </table>
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-            </div>
+            <br /><br /><br />
             <div>
                 <input type="text" placeholder="이수" id="type" style="width: 70px">
                 <input type="text" placeholder="필수" id="necessary" style="width: 70px"> 
@@ -233,5 +260,6 @@
                 <input type="number" placeholder="기말고사" id="final" style="width: 70px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
                 <button onclick="tableCreate()">table_append</button>
             </div>
+        </div>
     </body>
 </html>
