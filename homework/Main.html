@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>RestfulAPI</title>
+        <script src="http://code.jquery.com/jquery-3.4.1.js"></script>
+    </head>
+
+    <style>
+        .redfont {
+            color: red;
+        }
+    </style>
+
+    <script>
+        var total_grade = 0;
+        var total_attendance = 0;
+        var total_homework = 0;
+        var total_midterm = 0;
+        var total_final = 0;
+        var sum_total = 0;
+        var average = 0;
+        var average_score = '';
+        var table_counter = 1;
+        var check_type = false;     // false일경우 전공, true일경우 교양
+
+        function tableCreate(){
+            var tc = new Array();
+            var html = '';
+                        
+            var type = $("#type").val();
+            var necessary = $("#necessary").val();
+            var subject = $("#subject").val();
+            var grade = $("#grade").val();
+            var attendance = $("#attendance").val();
+            var homework = $("#homework").val();
+            var midterm = $("#midterm").val();
+            var final = $("#final").val();
+
+            if(type == "") {
+                alert("이수항목을 입력해 주시기 바랍니다.");
+                return;
+            } else if(necessary == "") {
+                alert("필수항목을 입력해 주시기 바랍니다.");
+                return;
+            } else if(subject == "") {
+                alert("과목명을 입력해 주시기 바랍니다.");
+                return;
+            } else if(grade == "") {
+                alert("학점을 입력해 주시기 바랍니다.");
+                return;
+            } else if(attendance == "") {
+                alert("출석점수를 입력해 주시기 바랍니다.");
+                return;
+            } else if(homework == "") {
+                alert("과제점수를 입력해 주시기 바랍니다.");
+                return;
+            } else if(midterm == "") {
+                alert("중간고사 점수를 입력해 주시기 바랍니다.");
+                return;
+            } else if(final == "") {
+                alert("기말고사 점수를 입력해 주시기 바랍니다.");
+                return;
+            } else if(type != "전공" && type != "교양") {
+                alert("이수항목은 전공 혹은 교양만 입력 가능합니다.");
+                return;
+            } else if(necessary != "필수" && necessary != "선택") {
+                alert("필수항목은 필수 혹은 선택만 입력 가능합니다.");
+                return;
+            }
+
+            var num_grade = Number(grade);
+            var num_attendance = Number(attendance);
+            var num_homework = Number(homework);
+            var num_midterm = Number(midterm);
+            var num_final = Number(final);
+
+            if(num_grade > 3 || num_grade < 1) {
+                alert("학점은 1~3 사이로 입력해 주시기 바랍니다.");
+                return;
+            } else if(num_attendance < 0 || num_attendance > 20) {
+                alert("출석점수는 0~20점 사이로 입력해 주시기 바랍니다.");
+                return;
+            } else if(num_homework < 0 || num_homework > 20) {
+                alert("과제점수는 0~20점 사이로 입력해 주시기 바랍니다.");
+                return;
+            } else if(num_midterm < 0 || num_midterm > 30) {
+                alert("중간고사 점수는 0~30점 사이로 입력해 주시기 바랍니다.");
+                return;
+            } else if(num_final < 0 || num_final > 30) {
+                alert("기말고사 점수는 0~30점 사이로 입력해 주시기 바랍니다.");
+                return;
+            }
+
+            var total = num_attendance + num_homework + num_midterm + num_final;
+            var score = '';
+
+            if(type == "교양") {
+                check_type = true;
+            }
+
+            total_grade += num_grade;
+            total_attendance += num_attendance;
+            total_homework += num_homework;
+            total_midterm += num_midterm;
+            total_final += num_final;
+            sum_total += total;
+            average = sum_total / table_counter;
+            average_score = calScore(false, average);
+
+            score = calScore(check_type, total);
+                        
+            html += '<tr>';
+            html += '<td bgcolor="white">'+type+'</td>';
+            html += '<td>'+necessary+'</td>';
+            html += '<td>'+subject+'</td>';
+            html += '<td>'+grade+'</td>';
+            html += '<td>'+attendance+'</td>';
+            html += '<td>'+homework+'</td>';
+            html += '<td>'+midterm+'</td>';
+            html += '<td>'+final+'</td>';
+            html += '<td>'+total+'</td>';
+            html += '<td></td>';
+            if(score == 'F' || score == 'NP') {
+                html += '<td style="color: red">'+score+'</td>';
+            } else {
+                html += '<td>'+score+'</td>';
+            }
+            html += '</tr>';
+                        
+            $("#dynamicTable").append(html);
+                        
+            $("#type").val('');
+            $("#necessary").val('');
+            $("#subject").val('');
+            $("#grade").val('');
+            $("#attendance").val('');
+            $("#homework").val('');
+            $("#midterm").val('');
+            $("#final").val('');
+
+            $("#totalGrade").val(total_grade);
+            $("#totalAttendance").val(total_attendance);
+            $("#totalHomework").val(total_homework);
+            $("#totalMidterm").val(total_midterm);
+            $("#totalFinal").val(total_final);
+            $("#totalSum").val(sum_total);
+            $("#average").val(average);
+            $("#average_score").val(average_score);
+            if(average_score == 'F') {
+                $("#average_score").addClass("redfont");
+            } else if(average_score != 'F' && $("#average_score").hasClass("redfont")) {
+                $("#average_score").removeClass("redfont");
+            }
+            check_type = false;
+            table_counter += 1;
+        }
+
+        function calScore(check_type, score) {
+            if(!check_type) {
+                if(score >= 95) {
+                    return 'A+';
+                } else if(score >= 90) {
+                    return 'A0';
+                } else if(score >= 85) {
+                    return 'B+';
+                } else if(score >= 80) {
+                    return 'B0';
+                } else if(score >= 75) {
+                    return 'C+';
+                } else if(score >= 70) {
+                    return 'C0';
+                } else if(score >= 65) {
+                    return 'D+';
+                } else if(score >= 60) {
+                    return 'D0';
+                } else {
+                    return 'F';
+                }
+            } else {
+                if(score >= 60) {
+                    return 'P';
+                } else if(score >= 0) {
+                    return 'NP';
+                }
+            }
+        }
+
+    </script>
+
+    <body>
+        <div>
+            <table id="dynamicTable" border="1px">
+                <thead>
+                    <tr>
+                        <th width="70px">이수</th>
+                        <th width="70px">필수</th>
+                        <th width="250px">과목명</th>
+                        <th width="70px">학점</th>
+                        <th width="70px">출석점수</th>
+                        <th width="70px">과제점수</th>
+                        <th width="70px">중간고사</th>
+                        <th width="70px">기말고사</th>
+                        <th width="70px">총점</th>
+                        <th width="70px">평균</th>
+                        <th width="70px">성적</th>
+                    </tr>
+                </thead>
+            <tbody id="dynamicTbody">
+
+            </tbody>
+            <tr>
+                <td colspan="3">합계</td>
+                <td><input id="totalGrade" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
+                <td><input id="totalAttendance" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
+                <td><input id="totalHomework" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
+                <td><input id="totalMidterm" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
+                <td><input id="totalFinal" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
+                <td><input id="totalSum" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
+                <td><input id="average" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
+                <td><input id="average_score" type="text" style="background-color:transparent;border:0 solid black;text-align:center; width: 70px" readonly></td>
+            </tr>
+            </table>
+            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+            </div>
+            <div>
+                <input type="text" placeholder="이수" id="type" style="width: 70px">
+                <input type="text" placeholder="필수" id="necessary" style="width: 70px"> 
+                <input type="text" placeholder="과목명" id="subject" style="width: 250px">
+                <input type="number" placeholder="학점" id="grade" style="width: 70px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                <input type="number" placeholder="출석점수" id="attendance" style="width: 70px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                <input type="number" placeholder="과제점수" id="homework" style="width: 70px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                <input type="number" placeholder="중간고사" id="midterm" style="width: 70px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                <input type="number" placeholder="기말고사" id="final" style="width: 70px" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                <button onclick="tableCreate()">table_append</button>
+            </div>
+    </body>
+</html>
